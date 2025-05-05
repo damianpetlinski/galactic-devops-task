@@ -1,14 +1,14 @@
 # --- ENV / AWS ---
-environment           = "dev"
+environment           = "local"
 aws_region            = "us-east-1"
 aws_endpoint_url      = "http://localhost:4566"
 aws_access_key_id     = "test"
 aws_secret_access_key = "test"
-
+provider_type         = "local"       
 # --- TAGS ---
 tags = {
   Project     = "user-api"
-  Environment = "dev"
+  Environment = "local"
   Owner       = "damian"
 }
 

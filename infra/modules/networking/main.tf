@@ -2,16 +2,12 @@ resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = merge(var.tags, {
-    Name = "user-api-vpc"
-  })
+  tags                 = var.tags
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
-  tags = merge(var.tags, {
-    Name = "user-api-igw"
-  })
+  tags   = var.tags
 }
 
 resource "aws_subnet" "public" {
@@ -20,9 +16,7 @@ resource "aws_subnet" "public" {
   cidr_block              = var.public_subnet_cidrs[count.index]
   availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
-  tags = merge(var.tags, {
-    Name = "user-api-public-${count.index + 1}"
-  })
+  tags                    = var.tags
 }
 
 resource "aws_subnet" "private" {
@@ -30,16 +24,12 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.this.id
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
-  tags = merge(var.tags, {
-    Name = "user-api-private-${count.index + 1}"
-  })
+  tags              = var.tags
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
-  tags = merge(var.tags, {
-    Name = "user-api-public-rt"
-  })
+  tags   = var.tags
 }
 
 resource "aws_route" "public_internet_access" {
@@ -55,36 +45,30 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_eip" "nat" {
-  count = var.enable_nat_gateway ? 1 : 0
-  vpc   = true
-  tags = merge(var.tags, {
-    Name = "user-api-nat-eip"
-  })
+  count  = var.enable_nat_gateway ? 1 : 0
+  domain = "vpc"
+  tags   = var.tags
 }
 
 resource "aws_nat_gateway" "this" {
   count         = var.enable_nat_gateway ? 1 : 0
   allocation_id = aws_eip.nat[0].id
   subnet_id     = aws_subnet.public[0].id
-  tags = merge(var.tags, {
-    Name = "user-api-nat"
-  })
-  depends_on = [aws_internet_gateway.this]
+  tags          = var.tags
+  depends_on    = [aws_internet_gateway.this]
 }
 
 resource "aws_route_table" "private" {
   count  = var.enable_nat_gateway ? 1 : 0
   vpc_id = aws_vpc.this.id
-  tags = merge(var.tags, {
-    Name = "user-api-private-rt"
-  })
+  tags   = var.tags
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count                   = var.enable_nat_gateway ? 1 : 0
-  route_table_id          = aws_route_table.private[0].id
-  destination_cidr_block  = "0.0.0.0/0"
-  nat_gateway_id          = aws_nat_gateway.this[0].id
+  count                  = var.enable_nat_gateway ? 1 : 0
+  route_table_id         = aws_route_table.private[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.this[0].id
 }
 
 resource "aws_route_table_association" "private" {

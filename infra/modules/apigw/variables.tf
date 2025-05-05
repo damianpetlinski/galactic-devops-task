@@ -6,7 +6,7 @@ variable "name" {
 variable "description" {
   description = "Description of the API Gateway"
   type        = string
-  default     = "API Gateway for Lambda function"
+  default     = ""
 }
 
 variable "resources" {
@@ -14,48 +14,47 @@ variable "resources" {
   type        = list(string)
 }
 
-variable "http_method" {
-  description = "HTTP method to allow"
+variable "method" {
+  description = "HTTP method to support"
   type        = string
   default     = "GET"
 }
 
 variable "authorization" {
-  description = "Authorization method (NONE, AWS_IAM, CUSTOM, COGNITO_USER_POOLS)"
+  description = "Authorization type"
   type        = string
   default     = "NONE"
 }
 
 variable "api_key_required" {
-  description = "Whether API key is required"
+  description = "Whether an API key is required"
   type        = bool
   default     = false
 }
 
 variable "lambda_uri" {
-  description = "The URI of the Lambda function for integration"
+  description = "URI of the Lambda function"
   type        = string
 }
 
 variable "lambda_function_name" {
-  description = "The Lambda function name (used for permission resource)"
+  description = "Name of the Lambda function"
   type        = string
 }
 
 variable "stage_name" {
-  description = "Deployment stage name (e.g., dev, prod)"
+  description = "Deployment stage name"
   type        = string
   default     = "dev"
 }
 
-variable "endpoint_types" {
-  description = "List of endpoint types for the API Gateway"
-  type        = list(string)
-  default     = ["REGIONAL"]
-}
-
 variable "tags" {
-  description = "Tags to apply to all resources"
+  description = "Tags to apply to resources"
   type        = map(string)
   default     = {}
+}
+
+variable "provider_type" {
+  description = "Deployment provider type: local or aws"
+  type        = string
 }

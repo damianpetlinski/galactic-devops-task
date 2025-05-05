@@ -13,11 +13,6 @@ output "db_port" {
   description = "RDS port"
 }
 
-output "db_name" {
-  value       = aws_db_instance.this.name
-  description = "Database name"
-}
-
 output "security_group_id" {
   value       = var.create_security_group ? aws_security_group.this[0].id : null
   description = "Security group ID for the RDS instance"

@@ -1,6 +1,3 @@
 bucket      = "tfstate-bucket"
 key         = "environment/dev/terraform.tfstate"
 region      = "us-east-1"
-endpoint    = "http://localhost:4566"
-access_key  = "test"
-secret_key  = "test"

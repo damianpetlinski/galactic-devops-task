@@ -1,19 +1,3 @@
-provider "aws" {
-  region                      = var.aws_region
-  access_key                  = var.aws_access_key_id
-  secret_key                  = var.aws_secret_access_key
-  skip_credentials_validation = true
-  skip_metadata_api_check     = true
-  s3_force_path_style         = true
-  endpoints {
-    s3 = var.aws_endpoint_url
-    rds = var.aws_endpoint_url
-    lambda = var.aws_endpoint_url
-    apigateway = var.aws_endpoint_url
-    ec2 = var.aws_endpoint_url
-  }
-}
-
 module "networking" {
   source                  = "./modules/networking"
   vpc_cidr                = var.vpc_cidr
@@ -62,7 +46,7 @@ module "lambda_with_s3" {
   }
 
   environment_variables = {
-    DATABASE_URL = "postgresql://${var.db_username}:${var.db_password}@${module.rds.db_address}:${module.rds.db_port}/${module.rds.db_name}"
+    DATABASE_URL = "postgresql://${var.db_username}:${var.db_password}@${module.rds.db_address}:${module.rds.db_port}/${var.db_name}"
     ENVIRONMENT  = var.environment
   }
 
@@ -90,4 +74,5 @@ module "apigw" {
   lambda_function_name = module.lambda_with_s3.lambda_function_name
   stage_name           = var.environment
   tags                 = var.tags
+  provider_type        = var.provider_type
 }

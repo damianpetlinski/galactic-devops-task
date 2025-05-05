@@ -24,6 +24,12 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
+variable "provider_type" {
+  description = "Type of provider to use (aws | local)"
+  type        = string
+  default     = ""
+}
+
 # --- TAGGING ---
 variable "tags" {
   description = "Tags to apply to all resources"

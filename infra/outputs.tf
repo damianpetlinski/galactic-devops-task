@@ -11,5 +11,5 @@ output "rds_endpoint" {
 }
 
 output "s3_bucket_name" {
-  value = module.lambda_with_s3.lambda_s3_bucket_name
+  value = module.lambda_with_s3.s3_bucket_name
 }
