@@ -42,7 +42,7 @@ variable "lambda_function_name" {
   type        = string
 }
 
-variable "stage_name" {
+variable "environment" {
   description = "Deployment stage name"
   type        = string
   default     = "dev"

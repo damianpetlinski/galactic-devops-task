@@ -125,3 +125,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "store_credentials_in_secretsmanager" {
+  type        = bool
+  default     = false
+  description = "Store credentials in Secrets Manager"
+}

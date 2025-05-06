@@ -86,7 +86,9 @@ variable "db_username" {
 
 variable "db_password" {
   type        = string
+  default     = null
   sensitive   = true
+  description = "Optional password for RDS. Ignored if store_credentials_in_secretsmanager = true."
 }
 
 variable "db_name" {
@@ -121,6 +123,9 @@ variable "db_maintenance_window" {
   type = string
 }
 
+variable "store_credentials_in_secretsmanager" {
+  type        = bool
+}
 # --- LAMBDA + S3 ---
 variable "lambda_function_name" {
   type = string

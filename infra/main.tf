@@ -9,27 +9,29 @@ module "networking" {
 }
 
 module "rds" {
-  source                   = "./modules/rds"
-  identifier               = var.db_identifier
-  engine                   = var.db_engine
-  engine_version           = var.db_engine_version
-  instance_class           = var.db_instance_class
-  username                 = var.db_username
-  password                 = var.db_password
-  db_name                  = var.db_name
-  allocated_storage        = var.db_allocated_storage
-  max_allocated_storage    = var.db_max_allocated_storage
-  skip_final_snapshot      = var.db_skip_final_snapshot
-  deletion_protection      = var.db_deletion_protection
-  backup_retention_period  = var.db_backup_retention_period
-  backup_window            = var.db_backup_window
-  maintenance_window       = var.db_maintenance_window
-  subnet_ids               = module.networking.private_subnet_ids
-  vpc_id                   = module.networking.vpc_id
-  allowed_cidr_blocks      = [module.networking.vpc_cidr]
-  create_security_group    = true
-  tags                     = var.tags
+  source                              = "./modules/rds"
+  identifier                       = var.db_identifier
+  engine                           = var.db_engine
+  engine_version                   = var.db_engine_version
+  instance_class                   = var.db_instance_class
+  username                         = var.db_username
+  password                         = var.db_password
+  db_name                             = var.db_name
+  allocated_storage                = var.db_allocated_storage
+  max_allocated_storage            = var.db_max_allocated_storage
+  skip_final_snapshot              = var.db_skip_final_snapshot
+  deletion_protection              = var.db_deletion_protection
+  backup_retention_period          = var.db_backup_retention_period
+  backup_window                    = var.db_backup_window
+  maintenance_window               = var.db_maintenance_window
+  subnet_ids                          = module.networking.private_subnet_ids
+  vpc_id                              = module.networking.vpc_id
+  allowed_cidr_blocks                 = [module.networking.vpc_cidr]
+  create_security_group               = true
+  store_credentials_in_secretsmanager = true
+  tags                                = var.tags
 }
+
 
 module "lambda_with_s3" {
   source                    = "./modules/lambda_with_s3"
@@ -46,7 +48,7 @@ module "lambda_with_s3" {
   }
 
   environment_variables = {
-    DATABASE_URL = "postgresql://${var.db_username}:${var.db_password}@${module.rds.db_address}:${module.rds.db_port}/${var.db_name}"
+    DATABASE_URL = "postgresql://${module.rds.db_username}:${module.rds.db_password}@${module.rds.db_address}:${module.rds.db_port}/${var.db_name}"
     ENVIRONMENT  = var.environment
   }
 
@@ -72,7 +74,7 @@ module "apigw" {
   api_key_required     = var.api_key_required
   lambda_uri           = module.lambda_with_s3.lambda_function_arn
   lambda_function_name = module.lambda_with_s3.lambda_function_name
-  stage_name           = var.environment
+  environment           = var.environment
   tags                 = var.tags
   provider_type        = var.provider_type
 }

@@ -25,7 +25,6 @@ db_engine                = "postgres"
 db_engine_version        = "15.4"
 db_instance_class        = "db.t3.micro"
 db_username              = "postgres"
-db_password              = "postgres"
 db_name                  = "users"
 db_allocated_storage     = 20
 db_max_allocated_storage = 100
@@ -34,6 +33,7 @@ db_deletion_protection   = false
 db_backup_retention_period = 7
 db_backup_window         = "03:00-04:00"
 db_maintenance_window    = "Sun:05:00-Sun:06:00"
+store_credentials_in_secretsmanager = true
 
 # --- LAMBDA ---
 lambda_function_name    = "user-api-fn"
